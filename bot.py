@@ -2,11 +2,14 @@ from telethon import TelegramClient, events
 from datetime import datetime, timezone
 import asyncio
 
-# 🔑 YOUR API
+# 🔑 YOUR API (same as your file)
 api_id = 33213300
 api_hash = "a75cec1d75321e310763fb28353ced42"
 
-# 📡 CHANNEL MAP
+# 📱 PHONE NUMBER
+phone = "+60122459600"  # 👈 YAHAN APNA NUMBER DALNA HAI
+
+# 📡 CHANNEL MAP (same as your file)
 channel_map = {
     -1002034302956: -1003610042240,
     -1002439392027: -1003610042240,
@@ -30,16 +33,15 @@ client = TelegramClient("session", api_id, api_hash)
 def is_today(msg_date):
     return msg_date.date() == datetime.now(timezone.utc).date()
 
-# 🚀 FAST FETCH (TODAY POSTS)
+# 🚀 FAST FETCH
 async def fetch_today_messages():
     print("⚡ Fast fetching started...")
 
     for source_id, target_id in channel_map.items():
         print(f"🔎 Checking: {source_id}")
 
-        async for msg in client.iter_messages(source_id, limit=100):  # 🔥 limit added (FAST)
+        async for msg in client.iter_messages(source_id, limit=100):
             if is_today(msg.date):
-
                 try:
                     if msg.media:
                         await client.send_file(
@@ -55,9 +57,8 @@ async def fetch_today_messages():
                             )
                 except Exception as e:
                     print("Error:", e)
-
             else:
-                break  # stop early = fast
+                break
 
 # 🚀 LIVE POSTS
 @client.on(events.NewMessage(chats=list(channel_map.keys())))
@@ -88,7 +89,7 @@ async def handler(event):
 
 # ▶️ MAIN
 async def main():
-    await client.start()
+    await client.start(phone)  # 👈 FIXED (NO INPUT ISSUE)
     print("🔥 FAST BOT RUNNING 🔥")
 
     await fetch_today_messages()
